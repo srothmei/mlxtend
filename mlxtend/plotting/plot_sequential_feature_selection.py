@@ -17,7 +17,8 @@ def plot_sequential_feature_selection(metric_dict,
                                       marker='o',
                                       alpha=0.2,
                                       ylabel='Performance',
-                                      confidence_interval=0.95):
+                                      confidence_interval=0.95,
+                                      ax=None):
     """Plot feature selection results.
 
     Parameters
@@ -42,6 +43,8 @@ def plot_sequential_feature_selection(metric_dict,
         Y-axis label.
     confidence_interval : float (default: 0.95)
         Confidence level if `kind='ci'`.
+    ax : matplotlib Axes, optional
+        Axes object to draw the plot onto
 
     Returns
     ----------
@@ -58,11 +61,15 @@ def plot_sequential_feature_selection(metric_dict,
     if kind not in allowed:
         raise AttributeError('kind not in %s' % allowed)
 
-    # fig = plt.figure()
-    if figsize is not None:
-        fig = plt.subplots(figsize=figsize)
+    if ax is not None:
+        plt.sca(ax) # Perform the plotting on the provided axis object
+        fig = ax # return the axis object instead of the figure
     else:
-        fig = plt.subplots()
+        # fig = plt.figure()
+        if figsize is not None:
+            fig = plt.subplots(figsize=figsize)
+        else:
+            fig = plt.subplots()
 
     k_feat = sorted(metric_dict.keys())
     avg = [metric_dict[k]['avg_score'] for k in k_feat]
